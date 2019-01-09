@@ -26,6 +26,7 @@ artsand science
 */
 const COUNTRY = '_____DATA______'.trim().replace(' ', '').toLowerCase();
 const STATE = '_____DATA______'.trim().replace(' ', '').toLowerCase();
+const CITY = '_____DATA______'.trim().replace(' ', '').toLowerCase();
 const AGE = '_____DATA______'.trim().replace(' ', '').toLowerCase();
 const MAJOR_CATOGORY = '_____DATA______'.trim().replace(' ', '').toLowerCase();
 const MAJOR = '_____DATA______'.trim().replace(' ', '').toLowerCase();
@@ -36,6 +37,7 @@ const AGE_WHEN_MOVED_ABROAD = '_____DATA______'.trim().replace(' ', '').toLowerC
 // RUN THE NEURAL NET
 const output = net.run({
 	Country: map['Country'].hasOwnProperty(COUNTRY) ? map['Country'][COUNTRY] : "",
+	City: map['City'].hasOwnProperty(CITY) ? map['City'][CITY] : "",
 	'State (na if not applicable)': map['State (na if not applicable)'].hasOwnProperty(STATE) ? map['State (na if not applicable)'][STATE] : "",
 	Age: map['Age'].hasOwnProperty(AGE) ? map['Age'][AGE] : "",
 	'Major Category/Industry': map['Major Category/Industry'].hasOwnProperty(MAJOR_CATOGORY) ? map['Major Category/Industry'][MAJOR_CATOGORY] : "",
