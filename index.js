@@ -49,11 +49,11 @@ const processData = data => {
 	// object
 	const output = net.run({
 		'USA': 1,
-		'New York City': 1,
+		'Boston': 1,
 		'23': 1,
 		'台北市': 1,
-		'Computer Science': 1,
-		'Female': 1
+		'Data Science': 1,
+		'Male': 1
 	});
 
 	console.log(output);
