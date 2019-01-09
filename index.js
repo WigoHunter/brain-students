@@ -6,8 +6,32 @@ const file = fs.createReadStream('responses.csv');
 // Process Data
 const processData = data => {
 	const frame = data[0];
-	data = data.slice(1).filter(e => e[12] != '').map(entry => {
-		let input = {}
+	let map = {};
+	let indices = {};
+
+	data = data.slice(1).filter(e => e[12] != '');
+	
+	for(let i = 1; i < frame.length - 1; i++) {
+		map[frame[i]] = {};
+		indices[frame[i]] = 0;
+	}
+
+	// for example, location: { 'new york': 1 }
+	data.forEach(entry => {
+		for (let i = 1; i < frame.length - 1; i++) {
+			const key = `${entry[i]}`.trim().replace(' ', '').toLowerCase();
+
+			if (!map[frame[i]].hasOwnProperty(key)) {
+				map[frame[i]][key] = indices[frame[i]]++;
+			}
+		}
+	});
+
+	console.log(map);
+
+	data = data.map(entry => {
+		let input = {};
+
 		for (let i = 1; i < frame.length - 1; i++) {
 			input[entry[i]] = 1;
 
@@ -25,7 +49,7 @@ const processData = data => {
 		};
 	});
 
-	console.log(data);
+	console.log(data[0]);
 	
 	// const net = new brain.NeuralNetwork();
 	// net.train(data, {
@@ -34,7 +58,7 @@ const processData = data => {
 
 	const cv = new brain.CrossValidate(brain.NeuralNetwork);
 	const stats = cv.train(data, { log: true });
-	console.log(stats);
+	// console.log(stats);
 	const net = cv.toNeuralNetwork();
 
 
