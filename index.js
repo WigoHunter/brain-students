@@ -2,82 +2,54 @@ const fs = require('fs');
 const brain = require('brain.js');
 const papa = require('papaparse');
 const file = fs.createReadStream('responses.csv');
+const map = require('./map.json');
+const model = require('./net.json');
+
+console.log(map);
 
 // Process Data
 const processData = data => {
-	const frame = data[0];
-	let map = {};
-	let indices = {};
+	// const frame = data[0];
+	// data = data.slice(1).filter(e => e[12] != '').map(entry => {
+	// 	let input = {};
 
-	data = data.slice(1).filter(e => e[12] != '');
+	// 	for (let i = 1; i < frame.length - 1; i++) {
+	// 		const key = `${entry[i]}`.trim().replace(' ', '').toLowerCase();
+	// 		input[frame[i]] = map[frame[i]][key];
+	// 	}
+
+	// 	return {
+	// 		input,
+	// 		output: {
+	// 			happiness: entry[frame.length - 1] / 10
+	// 		}
+	// 	};
+	// });
 	
-	for(let i = 1; i < frame.length - 1; i++) {
-		map[frame[i]] = {};
-		indices[frame[i]] = 0;
-	}
-
-	// for example, location: { 'new york': 1 }
-	data.forEach(entry => {
-		for (let i = 1; i < frame.length - 1; i++) {
-			const key = `${entry[i]}`.trim().replace(' ', '').toLowerCase();
-
-			if (!map[frame[i]].hasOwnProperty(key)) {
-				map[frame[i]][key] = indices[frame[i]]++;
-			}
-		}
-	});
-
-	console.log(map);
-
-	data = data.map(entry => {
-		let input = {};
-
-		for (let i = 1; i < frame.length - 1; i++) {
-			input[entry[i]] = 1;
-
-			// input[frame[i]] = {}
-			// input[frame[i]][entry[i]] = 1;
-
-			// input[frame[i]] = entry[i];
-		}
-
-		return {
-			input,
-			output: {
-				[entry[frame.length - 1] / 10]: 1
-			}
-		};
-	});
-
-	console.log(data[0]);
-	
-	// const net = new brain.NeuralNetwork();
+	const net = new brain.NeuralNetwork();
+	net.fromJSON(model);
 	// net.train(data, {
-	// 	log: true
+	// 	log: false,
+	// 	errorThresh: 0.01
 	// });
 
-	const cv = new brain.CrossValidate(brain.NeuralNetwork);
-	const stats = cv.train(data, { log: true });
+	// const cv = new brain.CrossValidate(brain.NeuralNetwork);
+	// const stats = cv.train(data, { log: false });
 	// console.log(stats);
-	const net = cv.toNeuralNetwork();
+	// const net = cv.toNeuralNetwork();
 
+	// fs.writeFile('net.json', JSON.stringify(net.toJSON()), 'utf8', () => console.log('success!'));
 
-	// test = {
-	// 	Country: { USA: 1 },
-	// 	City: {'New York City': 1},
-	// 	Aga: {'23': 1},
-	// 	Major: {'Computer Science': 1},
-	// 	Gender: {'Male': 1}
-	// }
-
-	// object
 	const output = net.run({
-		'USA': 1,
-		'New York City': 1,
-		'23': 1,
-		'台北市': 1,
-		'Computer Science': 1,
-		'Female': 1
+		Country: 3,
+		'State (na if not applicable)': 9,
+		Age: 0,
+		'Major Category/Industry': 0,
+		Major: 6,
+		'City in Taiwan you\'re from': 0,
+		'Birth Month': 7,
+		Gender: 0,
+		'Age When Moved Abroad': 0
 	});
 
 	console.log(output);
